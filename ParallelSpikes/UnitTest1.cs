@@ -35,7 +35,6 @@ namespace ParallelSpikes
 
             Thread.Sleep(2000);
             Console.WriteLine(DateStamp() + "done the rest");
-
         }
 
 
@@ -74,15 +73,13 @@ namespace ParallelSpikes
 
             Thread.Sleep(4000);
             Console.WriteLine(DateStamp() + "4 secs passed");
-
-            //Console.ReadLine();
         }
 
 
 
         private static string DateStamp()
         {
-            return String.Format("{0:hh:mm:ss.ff}", DateTime.Now) + " - ";
+            return String.Format("{0:HH:mm:ss.ff}", DateTime.Now) + " - ";
         }
     }
 }

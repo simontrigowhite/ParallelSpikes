@@ -18,11 +18,8 @@ namespace ParallelSpikes
             Task<string> y = this.SimulateAsync("y", 6);
 
             string xResult = x.Result;
-            Console.WriteLine(DateStamp() + xResult);
-
             string yResult = y.Result;
-            Console.WriteLine(DateStamp() + yResult);
-
+            Console.WriteLine(DateStamp() + xResult + " " + yResult);
         }
 
         private async Task<string> SimulateAsync(string s, int secs)
@@ -31,7 +28,7 @@ namespace ParallelSpikes
 
             await Task.Delay(secs * 1000);
 
-            Console.WriteLine(DateStamp() + s + " " + "waited 5 secs; doing the rest");
+            Console.WriteLine(DateStamp() + s + " " + "waited " + secs + " secs; doing the rest");
 
             Thread.Sleep(2000);
             Console.WriteLine(DateStamp() + s + " " + "done the rest");
@@ -46,54 +43,41 @@ namespace ParallelSpikes
 
             Console.WriteLine(DateStamp() + "start");
 
-            Task x = Task.Factory.StartNew(() => Console.Write("")); // Console.WriteLine(DateStamp() + "I am the x task"));
-            Task y = Task.Factory.StartNew(() => Console.Write("")); // Console.WriteLine(DateStamp() + "I am the y task"));
+            Task x = Task.Factory.StartNew(() => Console.Write(""));
+            Task y = Task.Factory.StartNew(() => Console.Write(""));
 
             var x2 = x.ContinueWith(delegate
             {
-                int secs = 5;
-                string s = "x";
-
-                Console.WriteLine(DateStamp() + s + " " + "doing the wait");
-
-                Thread.Sleep(secs * 1000);
-
-                Console.WriteLine(DateStamp() + s + " " + "waited 5 secs; doing the rest");
-
-                Thread.Sleep(2000);
-                Console.WriteLine(DateStamp() + s + " " + "done the rest");
-
-                return s + " " + "result: done";
+                return SimulateAsTask("x", 5);
             });
 
-            var y2 = x.ContinueWith(delegate
+            var y2 = y.ContinueWith(delegate
             {
-                int secs = 6;
-                string s = "y";
-
-                Console.WriteLine(DateStamp() + s + " " + "doing the wait");
-
-                Thread.Sleep(secs * 1000);
-
-                Console.WriteLine(DateStamp() + s + " " + "waited 5 secs; doing the rest");
-
-                Thread.Sleep(2000);
-                Console.WriteLine(DateStamp() + s + " " + "done the rest");
-
-                return s + " " + "result: done";
+                return SimulateAsTask("y", 6);
             });
 
             string xResult = x2.Result;
-            Console.WriteLine(DateStamp() + xResult);
-
             string yResult = y2.Result;
-            Console.WriteLine(DateStamp() + yResult);
+            Console.WriteLine(DateStamp() + xResult + " " + yResult);
+        }
 
+        private static string SimulateAsTask(string s, int secs)
+        {
+            Console.WriteLine(DateStamp() + s + " " + "doing the wait");
+
+            Thread.Sleep(secs * 1000);
+
+            Console.WriteLine(DateStamp() + s + " " + "waited " + secs + " secs; doing the rest");
+
+            Thread.Sleep(2000);
+            Console.WriteLine(DateStamp() + s + " " + "done the rest");
+
+            return s + " " + "result: done";
         }
 
         private static string DateStamp()
         {
-            return String.Format("{0:hh:mm:ss.ff}", DateTime.Now) + " - ";
+            return String.Format("{0:HH:mm:ss.ff}", DateTime.Now) + " - ";
         }
     }
 }
